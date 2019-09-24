@@ -5,8 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class SimpleChatClient
-{
+public class SimpleChatClient {
     JTextArea incoming;
     JTextField outgoing;
     BufferedReader reader;
@@ -15,6 +14,7 @@ public class SimpleChatClient
 
     public void go() {
         JFrame frame = new JFrame("Ludicrously Simple Chat Client");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel mainPanel = new JPanel();
         incoming = new JTextArea(15, 50);
         incoming.setLineWrap(true);
@@ -32,6 +32,8 @@ public class SimpleChatClient
         frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
         setUpNetworking();
 
+        incoming.append("分别输入用户名和密码：" + "\n");
+
         Thread readerThread = new Thread(new IncomingReader());
         readerThread.start();
 
@@ -47,9 +49,7 @@ public class SimpleChatClient
             reader = new BufferedReader(streamReader);
             writer = new PrintWriter(sock.getOutputStream());
             System.out.println("networking established");
-        }
-        catch(IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -60,8 +60,7 @@ public class SimpleChatClient
                 writer.println(outgoing.getText());
                 writer.flush();
 
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             outgoing.setText("");
@@ -74,6 +73,7 @@ public class SimpleChatClient
     }
 
     class IncomingReader implements Runnable {
+
         public void run() {
             String message;
             try {
@@ -81,8 +81,7 @@ public class SimpleChatClient
                     System.out.println("client read " + message);
                     incoming.append(message + "\n");
                 }
-            } catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
